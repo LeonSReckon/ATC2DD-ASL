@@ -7,11 +7,13 @@ state("AirborneTroops")
 	int Start: 0x27B380, 0x58;
 	int Area: 0x0AD064, 0x10;
 	int Text: 0x274C7C, 0xA8, 0x8, 0x8, 0x1A0, 0x58, 0x8C, 0x168;
-	byte Obj: 0x25D260, 0x1C, 0x1C, 0xC, 0x128, 0x58, 0x44, 0xB14;
+	byte AObj : "stlport_vc745.dll", 0x086A3C, 0x14;
+	byte Obj : 0x29129C, 0x330, 0x1C, 0xA44;
 }
 
 startup
 {
+
 	settings.Add("SpeedRun Type", true, "SpeedRun Type");
 	settings.CurrentDefaultParent = "SpeedRun Type";
 	settings.Add("Full Game", false, "Full Game");
@@ -28,17 +30,20 @@ startup
 	settings.Add("Mission 7", false, "Mission 7");
 	settings.CurrentDefaultParent = null;
 
-    // settings.Add("Splits Type", false, "Splits type");
-    // settings.CurrentDefaultParent = "Splits Type";
+	settings.Add("Splits Type", false, "Splits type");
+	settings.CurrentDefaultParent = "Splits Type";
 	settings.Add("Area Splits", false, "Area Splits");
-    // settings.CurrentDefaultParent = null;
+	settings.Add("Objective Splits", false, "Objective Splits");
+	settings.CurrentDefaultParent = null;
+
 
     // Tool Tips
     settings.SetToolTip("SpeedRun Type", "Which type of SpeedRun you want to do");
     settings.SetToolTip("Full Game", "Check if you want to do a Full Game run");
     settings.SetToolTip("IL", "Check if you want to do IL runs");
-    // settings.SetToolTip("Splits Type", "Which type of split type you want to use");
+	settings.SetToolTip("Splits Type", "Which type of split type you want to use");
     settings.SetToolTip("Area Splits", "Check if you want to use the Area Splits");
+    settings.SetToolTip("Objective Splits", "Check if you want to use the Objective Splits");
     settings.SetToolTip("Mission 1", "Check if you want to run mission 1");
     settings.SetToolTip("Mission 2", "Check if you want to run mission 2");
     settings.SetToolTip("Mission 3", "Check if you want to run mission 3");
@@ -104,6 +109,13 @@ split
 	if(settings ["Area Splits"]){
 		if(current.Area != old.Area && current.Area != 60 || current.Area == 60 && old.Area == 61){
             return true;
+        }
+	}
+
+	if(settings ["Objective Splits"]){
+		if(current.AObj == 49 && old.AObj != 49 || current.AObj == 50 && old.AObj != 50 || current.AObj == 51 && old.AObj != 51 || current.AObj == 52 && old.AObj != 52 || current.AObj == 53 && old.AObj != 53 || current.AObj == 54 && old.AObj != 54 || current.AObj == 55 && old.AObj != 55 || current.AObj == 56 && old.AObj != 56 || current.AObj == 99 && old.AObj != 99){
+            return true;
+        }
 	}
 
 	if(settings ["Mission 1"]){
@@ -142,18 +154,10 @@ split
         }
 	}
 
-	if(settings ["Mission 7"]){
+	if(settings ["Mission 7"] || settings ["Full Game"]){
 		if(current.Start == 215 && current.Area == 7){
             return true;
         }
-	}
-
-// Last Split On The Last Mission only for Full Game runs
-	if(settings ["Full Game"]){
-		if(current.Start == 215 && current.Area == 7){
-            return true;
-			}
-		}
 	}
 }
 
